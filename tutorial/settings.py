@@ -30,11 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-<<<<<<< Updated upstream
-    'hello.apps.HelloConfig',
-=======
     'hello.apps.HelloConfig', # need to change
->>>>>>> Stashed changes
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
