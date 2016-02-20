@@ -17,9 +17,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^hello/', include('hello.urls')),
-    url(r'^admin/', admin.site.urls),
-    url(r'^another/one/', include('hello.urls'))
+    url(r'^poll/', include('poll.urls')),
+    url(r'^admin/', admin.site.urls)
 ]
 #urls라는 파일은 어떤 값이 입력되었을때 어떤 파이썬 파일을 호출해줄지 결정해주는파일.
 #hello/ url이 들어오면 hello.urls 로 가서 실행을 하겟다~

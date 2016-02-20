@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'hello.apps.HelloConfig', # need to change
+    'poll.apps.HelloConfig', # need to change
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
