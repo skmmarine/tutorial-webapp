@@ -5,6 +5,7 @@ from django.views import generic
 from django.utils import timezone
 from django.http import Http404
 from django.template import loader
+from django.db import IntegrityError
 
 from .models import Question, Choice, User
 
@@ -26,12 +27,23 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'poll/results.html'
 
-class SignInView(generic.ListView):
-    model = User
-    template_name = 'poll/signin.html'
+class SignInView(generic.View):
+    def get(self, request, *args, **kwargs):
+        template = loader.get_template('poll/signin.html')
+        context = {}
+        return HttpResponse(template.render(context, request))
 
-    def get_queryset(self):
-        return HttpResponseRedirect(reverse('poll:index'))
+    def post(self, request, *args, **kwargs):
+        try:
+            username = request.POST.get("username")
+            password = request.POST.get("password")
+            user = User(user_name=username, user_pw=password)
+            user.save()
+            return HttpResponseRedirect(reverse('poll:index'))
+        except (IntegrityError):
+            return HttpResponseRedirect(reverse('poll:login'))
+
+
 
 def vote(request, question_id):
     question = get_object_or_404(Question,pk=question_id)

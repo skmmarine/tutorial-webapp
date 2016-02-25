@@ -26,7 +26,7 @@ class Choice(models.Model):
 
 #for login
 class User(models.Model):
-    user_name = models.CharField(max_length=20)
+    user_name = models.CharField(max_length=20, unique=True)
     user_pw = models.CharField(max_length=20)
 
     def __str__(self):
