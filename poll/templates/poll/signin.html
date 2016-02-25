@@ -1,0 +1,8 @@
+<h1>sign in Page</h1>
+
+<form action="{% url 'poll:index' %}" method="post">
+    {% csrf_token %}
+    <input type="text">
+    <input type="password">
+    <input type="submit" value="sign in">
+</form>
