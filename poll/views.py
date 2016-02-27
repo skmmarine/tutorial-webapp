@@ -16,20 +16,30 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
-class DetailView(generic.DetailView):
-    model=Question
-    template_name = 'poll/detail.html'
-    def get_queryset(self):
-        """ Excludes any questions that aren't published yet"""
-        return Question.objects.filter(pub_date__lte=timezone.now())
+class LoginView(generic.View):
+    template_name='poll/login.html'
+    context_object_name = 'latest_User_list'
+    def get(self, request, *args, **kwargs): #url요청이 왓을때
+        template = loader.get_template('poll/login.html')
+        context={}
+        return HttpResponse(template.render(context,request))
 
-class ResultsView(generic.DetailView):
-    model = Question
-    template_name = 'poll/results.html'
+    def post(self, request, *args, **kwargs):
+        username = request.POST.get("username")
+        userpw = request.POST.get("password")
+        for i in range(1,3):
+            input_temp=User.objects.get(pk=i)
+            input_id=input_temp.user_name
+            input_pw=input_temp.user_pw
+            if(username==input_id ):
+                if(userpw==input_pw):
+                    return HttpResponseRedirect(reverse('poll:index'))
+        #return HttpResponseRedirect(reverse('poll:login'))
+        return render(request, 'poll/login.html',{'error_message':"try again, wrong Id or Password ",})
 
-class SignInView(generic.View):
+class SignUpView(generic.View):
     def get(self, request, *args, **kwargs):
-        template = loader.get_template('poll/signin.html')
+        template = loader.get_template('poll/signup.html')
         context = {}
         return HttpResponse(template.render(context, request))
 
@@ -41,9 +51,19 @@ class SignInView(generic.View):
             user.save()
             return HttpResponseRedirect(reverse('poll:index'))
         except (IntegrityError):
-            return HttpResponseRedirect(reverse('poll:login'))
+            #return HttpResponseRedirect(reverse('poll:signup'))
+            return render(request, 'poll/signup.html',{'error_message':"already exist ID",})
 
+class DetailView(generic.DetailView):
+    model=Question
+    template_name = 'poll/detail.html'
+    def get_queryset(self):
+        """ Excludes any questions that aren't published yet"""
+        return Question.objects.filter(pub_date__lte=timezone.now())
 
+class ResultsView(generic.DetailView):
+    model = Question
+    template_name = 'poll/results.html'
 
 def vote(request, question_id):
     question = get_object_or_404(Question,pk=question_id)

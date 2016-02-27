@@ -1,12 +1,14 @@
-<h1>Login Page</h1>
+<h1>sign in Page</h1>
 
-<form action="{% url 'poll:login' %}" method="post">
+<form action="{% url 'poll:signup' %}" method="post">
     {% csrf_token %}
     <input name="username" type="text">
     <input name="password" type="password">
     <input type="submit" value="sign up">
 </form>
+
 <ul>
-    <a href="/poll/signup/">sign_up</a>
+    <a href="/poll/">back to vote page</a>
 </ul>
+
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
