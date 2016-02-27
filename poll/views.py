@@ -16,6 +16,12 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')[:5]
 
+    def get(self, request, *args, **kwargs):
+        if request.session.get('username') is None:
+            return HttpResponseRedirect(reverse('poll:login'))
+        
+        return super(IndexView, self).get(request, args, kwargs)
+
 class LoginView(generic.View):
     template_name='poll/login.html'
     context_object_name = 'latest_User_list'
@@ -27,15 +33,14 @@ class LoginView(generic.View):
     def post(self, request, *args, **kwargs):
         username = request.POST.get("username")
         userpw = request.POST.get("password")
-        for i in range(1,3):
-            input_temp=User.objects.get(pk=i)
-            input_id=input_temp.user_name
-            input_pw=input_temp.user_pw
-            if(username==input_id ):
-                if(userpw==input_pw):
-                    return HttpResponseRedirect(reverse('poll:index'))
-        #return HttpResponseRedirect(reverse('poll:login'))
-        return render(request, 'poll/login.html',{'error_message':"try again, wrong Id or Password ",})
+
+        try:
+            user = User.objects.get(user_name=username, user_pw=userpw)
+            request.session['username'] = user.user_name
+            return HttpResponseRedirect(reverse('poll:index'))
+        except(User.DoesNotExist):
+            return render(request, 'poll/login.html',{'error_message':"try again, wrong Id or Password ",})            
+
 
 class SignUpView(generic.View):
     def get(self, request, *args, **kwargs):
