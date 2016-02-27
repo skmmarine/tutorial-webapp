@@ -19,12 +19,10 @@ class IndexView(generic.ListView):
     def get(self, request, *args, **kwargs):
         if request.session.get('username') is None:
             return HttpResponseRedirect(reverse('poll:login'))
-        
         return super(IndexView, self).get(request, args, kwargs)
 
 class LoginView(generic.View):
     template_name='poll/login.html'
-    context_object_name = 'latest_User_list'
     def get(self, request, *args, **kwargs): #url요청이 왓을때
         template = loader.get_template('poll/login.html')
         context={}
@@ -33,7 +31,6 @@ class LoginView(generic.View):
     def post(self, request, *args, **kwargs):
         username = request.POST.get("username")
         userpw = request.POST.get("password")
-
         try:
             user = User.objects.get(user_name=username, user_pw=userpw)
             request.session['username'] = user.user_name
@@ -66,9 +63,19 @@ class DetailView(generic.DetailView):
         """ Excludes any questions that aren't published yet"""
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+    def get(self, request, *args, **kwargs):
+        if request.session.get('username') is None:
+            return HttpResponseRedirect(reverse('poll:login'))
+        return super(DetailView, self).get(request, args, kwargs)
+
 class ResultsView(generic.DetailView):
     model = Question
     template_name = 'poll/results.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.session.get('username') is None:
+            return HttpResponseRedirect(reverse('poll:login'))
+        return super(ResultsView, self).get(request, args, kwargs)
 
 def vote(request, question_id):
     question = get_object_or_404(Question,pk=question_id)

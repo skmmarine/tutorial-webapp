@@ -4,9 +4,9 @@
     {% csrf_token %}
     <input name="username" type="text">
     <input name="password" type="password">
-    <input type="submit" value="sign up">
+    <input type="submit" value="Login">
 </form>
 <ul>
-    <a href="/poll/signup/">sign_up</a>
+    <a href="/poll/signup/">sign up</a>
 </ul>
 {% if error_message %}<p><strong>{{error_message}}</strong></p>{% endif %}
