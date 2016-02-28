@@ -38,6 +38,10 @@ class LoginView(generic.View):
         except(User.DoesNotExist):
             return render(request, 'poll/login.html',{'error_message':"try again, wrong Id or Password ",})            
 
+class LogoutView(generic.View):
+    def get(self, request, *args, **kwargs):
+        request.session['username'] = None
+        return HttpResponseRedirect(reverse('poll:index'))
 
 class SignUpView(generic.View):
     def get(self, request, *args, **kwargs):
