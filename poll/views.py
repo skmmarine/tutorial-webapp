@@ -43,6 +43,20 @@ class LogoutView(generic.View):
         request.session['username'] = None
         return HttpResponseRedirect(reverse('poll:index'))
 
+class InsertquestionView(generic.View):
+    model=Question
+    template_name='poll/insertquestion.html'
+    def get(self, request, *args, **kwargs):
+        template = loader.get_template('poll/insertquestion.html')
+        context ={}
+        return HttpResponse(template.render(context,request))
+
+    def post(self, request, *args, **kwargs):
+        q = request.POST.get("question")
+        insquestion=Question(question_text=q,pub_date=timezone.now())
+        insquestion.save()
+        return HttpResponseRedirect(reverse('poll:index'))
+
 class SignUpView(generic.View):
     def get(self, request, *args, **kwargs):
         template = loader.get_template('poll/signup.html')

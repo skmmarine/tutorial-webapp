@@ -1,0 +1,14 @@
+<style>
+    h1 { color : orange}
+</style>
+<h1>insert new question</h1>
+
+<form action="{% url 'poll:insertquestion' %}" method="post">
+    {% csrf_token %}
+    <input name="question" type="text">
+    <input type="submit" value="Make">
+</form>
+
+<ul>
+    <a href="/poll/">back to vote page</a>
+</ul>

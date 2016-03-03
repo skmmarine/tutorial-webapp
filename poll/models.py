@@ -30,4 +30,5 @@ class User(models.Model):
     user_pw = models.CharField(max_length=20)
 
     def __str__(self):
-        return "User: " + self.user_name + ", Password: " + self.user_pw
+        return self.user_name
+        #return "User: " + self.user_name + ", Password: " + self.user_pw
